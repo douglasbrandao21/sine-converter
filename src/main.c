@@ -7,16 +7,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
- 
 void writeInOutput(FILE* output, int angle, float sin, float cos) {
   float pi = 3.14159;
 
   float angleInRad = (angle * pi)/180;
 
-  fprintf(output, "Angle: %d\n\n", angle);
-  fprintf(output, "Rad: %f\n", angleInRad);
-  fprintf(output, "Sin: %f\n", sin);
-  fprintf(output, "Cos: %f\n", cos);
+  fprintf(output, "angle: %d°\n\n", angle);
+  fprintf(output, "rad: %f\n", angleInRad);
+  fprintf(output, "sin(%d) = %f\n", angle, sin);
+  fprintf(output, "cos(%d) = %f\n", angle, cos);
   fprintf(output, "--------------\n");
 }
 
@@ -36,37 +35,44 @@ float findSin(int inferiorAngle, int superiorAngle, float inferiorSin, float sup
     return angle;
 }
 
+int isCloseEnough(float inputSin, float tableSin) {
+  if(
+    (inputSin < tableSin && inputSin / tableSin >= 0.999) || 
+    (inputSin > tableSin && tableSin != 0 && inputSin / tableSin <= 1.001) || 
+    inputSin == tableSin
+  ) return 1;
+
+  return 0;
+}
+
 void calculateOutput(float sin[], float cos[], int angles[], float inputSins[], int numberOfSins) {
     FILE* output = fopen("../files/senocosseno.txt", "w");
 
     for(int inputIndex = 0; inputIndex < numberOfSins; inputIndex++) {
       for(int tableIndex = 0; tableIndex <= 90; tableIndex++) {
         float inputSin = inputSins[inputIndex];
-        float tableSin = sin[tableIndex];
-        
-        if(
-          (inputSin < tableSin && inputSin / tableSin >= 0.999) || 
-          (inputSin > tableSin && tableSin != 0 && inputSin / tableSin <= 1.001) || 
-          inputSin == tableSin
+
+        if (
+          isCloseEnough(inputSin, sin[tableIndex]) == 1 &&
+          isCloseEnough(inputSin, sin[tableIndex+1]) != 1
         ) {
           writeInOutput(output, angles[tableIndex], inputSin, cos[tableIndex]);
         }
-        else {
+        
+        else if(isCloseEnough(inputSin, sin[tableIndex+1]) != 1) {
           float outputAngle;
           float outputCos;
 
-          float inferiorSin = sin[tableIndex];
-          float superiorSin = sin[tableIndex + 1];
+          if(sin[tableIndex] < inputSin && sin[tableIndex+1] > inputSin) {
+            outputAngle = findSin(
+              angles[tableIndex], angles[tableIndex + 1], 
+              sin[tableIndex], sin[tableIndex+1], inputSin
+            );
 
-          float inferiorCos = cos[tableIndex];
-          float superiorCos = cos[tableIndex + 1];
-
-          int inferiorAngle = angles[tableIndex];
-          int superiorAngle = angles[tableIndex + 1];
-
-          if(inferiorSin < inputSin && superiorSin > inputSin) {
-            outputAngle = findSin(inferiorAngle, superiorAngle, inferiorSin, superiorSin, inputSin);
-            outputCos = findCos(inferiorAngle, superiorAngle, inferiorCos, superiorCos, outputAngle);
+            outputCos = findCos(
+              angles[tableIndex], angles[tableIndex + 1], 
+              cos[tableIndex], cos[tableIndex + 1], outputAngle
+            );
 
             writeInOutput(output, outputAngle, inputSin, outputCos);
           }
