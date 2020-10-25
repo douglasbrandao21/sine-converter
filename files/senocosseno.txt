@@ -8,3 +8,18 @@ angle in rad: 0.872664
 sin = 0.766044
 cos = 0.642788
 
+angle: 68°
+angle in rad: 1.186823
+sin = 0.926528
+cos = 0.374607
+
+angle: 21.21°
+angle in rad: 0.370193
+sin = 0.361787
+cos = 0.932233
+
+angle: 69°
+angle in rad: 1.204276
+sin = 0.932953
+cos = 0.358368
+

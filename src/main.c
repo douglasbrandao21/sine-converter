@@ -88,6 +88,7 @@ void calculateOutput(float sin[], float cos[], int angles[], float inputSins[], 
       }
     }
 
+    fclose(output);
 }
 
 void setTrigonometricTable(float sin[], float cos[], int angles[]) {
@@ -98,6 +99,8 @@ void setTrigonometricTable(float sin[], float cos[], int angles[]) {
     fscanf(trigonometricTable, "%f", &sin[index]);
     fscanf(trigonometricTable, "%f", &cos[index]);
   }
+
+  fclose(trigonometricTable);
 }
 
 int getNumberOfSins() {
@@ -108,6 +111,8 @@ int getNumberOfSins() {
 
   while(fscanf(sinsFile, "%f", &aux) == 1)
     numberOfSins++;
+  
+  fclose(sinsFile);
 
   return numberOfSins;
 }
@@ -117,6 +122,8 @@ void readInputSins(float array[], int numberOfElements) {
 
   for(int index = 0; index < numberOfElements; index++)
     fscanf(file, "%f", &array[index]);
+
+  fclose(file);
 }
 
 int main() {
