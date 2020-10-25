@@ -1,0 +1,10 @@
+angle: 24.80°
+angle in rad: 0.432853
+sin = 0.419452
+cos = 0.907751
+
+angle: 50°
+angle in rad: 0.872664
+sin = 0.766044
+cos = 0.642788
+
