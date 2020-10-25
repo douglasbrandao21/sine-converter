@@ -7,16 +7,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void writeInOutput(FILE* output, int angle, float sin, float cos) {
+void writeInOutput(FILE* output, int integerAngle, float floatAngle,  float sin, float cos) {
   float pi = 3.14159;
 
-  float angleInRad = (angle * pi)/180;
+  float angleInRad;
 
-  fprintf(output, "angle: %d°\n\n", angle);
-  fprintf(output, "rad: %f\n", angleInRad);
-  fprintf(output, "sin(%d) = %f\n", angle, sin);
-  fprintf(output, "cos(%d) = %f\n", angle, cos);
-  fprintf(output, "--------------\n");
+  if(integerAngle != -1)
+    angleInRad = (integerAngle * pi)/180;
+  else
+    angleInRad = (floatAngle * pi)/180;
+
+  if(integerAngle != -1)
+    fprintf(output, "angle: %d°\n", integerAngle);
+  else
+    fprintf(output, "angle: %.*f°\n", 2, floatAngle);
+
+  fprintf(output, "angle in rad: %f\n", angleInRad);
+  fprintf(output, "sin = %f\n", sin);
+  fprintf(output, "cos = %f\n\n", cos);
 }
 
 float findCos(int inferiorAngle, int superiorAngle, float inferiorCos, float superiorCos, float angle) {
@@ -56,7 +64,7 @@ void calculateOutput(float sin[], float cos[], int angles[], float inputSins[], 
           isCloseEnough(inputSin, sin[tableIndex]) == 1 &&
           isCloseEnough(inputSin, sin[tableIndex+1]) != 1
         ) {
-          writeInOutput(output, angles[tableIndex], inputSin, cos[tableIndex]);
+          writeInOutput(output, angles[tableIndex], -1, inputSin, cos[tableIndex]);
         }
         
         else if(isCloseEnough(inputSin, sin[tableIndex+1]) != 1) {
@@ -74,7 +82,7 @@ void calculateOutput(float sin[], float cos[], int angles[], float inputSins[], 
               cos[tableIndex], cos[tableIndex + 1], outputAngle
             );
 
-            writeInOutput(output, outputAngle, inputSin, outputCos);
+            writeInOutput(output, -1, outputAngle, inputSin, outputCos);
           }
         }
       }
