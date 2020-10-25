@@ -7,24 +7,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+ 
 void writeInOutput(FILE* output, int angle, float sin, float cos) {
   float pi = 3.14159;
 
   float angleInRad = (angle * pi)/180;
 
+  fprintf(output, "Angle: %d\n\n", angle);
   fprintf(output, "Rad: %f\n", angleInRad);
-  fprintf(output, "Cos: %f\n", sin);
-  fprintf(output, "Sin: %f\n", cos);
+  fprintf(output, "Sin: %f\n", sin);
+  fprintf(output, "Cos: %f\n", cos);
   fprintf(output, "--------------\n");
 }
 
-void calculateOutput(
-  float *inputSins, 
-  float *sin, 
-  float *cos, 
-  int *degrees, 
-  int numberOfSins
-  ) {
+float findCos(int inferiorAngle, int superiorAngle, float inferiorCos, float superiorCos, float angle) {
+    float slope = (superiorCos - inferiorCos) / (superiorAngle - inferiorAngle);
+
+    float cos = ((angle - inferiorAngle) * slope) + inferiorCos;
+
+    return cos;
+}
+
+float findSin(int inferiorAngle, int superiorAngle, float inferiorSin, float superiorSin, float inputSin) {
+    float slope = (superiorSin - inferiorSin) / (superiorAngle - inferiorAngle);
+
+    float angle = ((inputSin - inferiorSin) / slope) + inferiorAngle;
+    
+    return angle;
+}
+
+void calculateOutput(float sin[], float cos[], int angles[], float inputSins[], int numberOfSins) {
     FILE* output = fopen("../files/senocosseno.txt", "w");
 
     for(int inputIndex = 0; inputIndex < numberOfSins; inputIndex++) {
@@ -34,21 +46,41 @@ void calculateOutput(
         
         if(
           (inputSin < tableSin && inputSin / tableSin >= 0.999) || 
-          (inputSin > tableSin && inputSin / tableSin <= 1.001) || 
+          (inputSin > tableSin && tableSin != 0 && inputSin / tableSin <= 1.001) || 
           inputSin == tableSin
         ) {
-          writeInOutput(output, degrees[tableIndex], sin[tableIndex], cos[tableIndex]);
+          writeInOutput(output, angles[tableIndex], inputSin, cos[tableIndex]);
+        }
+        else {
+          float outputAngle;
+          float outputCos;
+
+          float inferiorSin = sin[tableIndex];
+          float superiorSin = sin[tableIndex + 1];
+
+          float inferiorCos = cos[tableIndex];
+          float superiorCos = cos[tableIndex + 1];
+
+          int inferiorAngle = angles[tableIndex];
+          int superiorAngle = angles[tableIndex + 1];
+
+          if(inferiorSin < inputSin && superiorSin > inputSin) {
+            outputAngle = findSin(inferiorAngle, superiorAngle, inferiorSin, superiorSin, inputSin);
+            outputCos = findCos(inferiorAngle, superiorAngle, inferiorCos, superiorCos, outputAngle);
+
+            writeInOutput(output, outputAngle, inputSin, outputCos);
+          }
         }
       }
     }
 
 }
 
-void setTrigonometricTable(float *sin, float *cos, int *degrees) {
+void setTrigonometricTable(float sin[], float cos[], int angles[]) {
   FILE* trigonometricTable = fopen("../files/trigo.txt", "r");
 
   for(int index = 0; index <= 90; index++) {
-    fscanf(trigonometricTable, "%d", &degrees[index]);
+    fscanf(trigonometricTable, "%d", &angles[index]);
     fscanf(trigonometricTable, "%f", &sin[index]);
     fscanf(trigonometricTable, "%f", &cos[index]);
   }
@@ -66,7 +98,7 @@ int getNumberOfSins() {
   return numberOfSins;
 }
 
-void readSins(float *array, int numberOfElements) {
+void readInputSins(float array[], int numberOfElements) {
   FILE* file = fopen("../files/seno.txt", "r");
 
   for(int index = 0; index < numberOfElements; index++)
@@ -74,20 +106,19 @@ void readSins(float *array, int numberOfElements) {
 }
 
 int main() {
-  int degrees[91];
-
   float sin[91];
   float cos[91];
 
+  int angles[91];
   int numberOfSins = getNumberOfSins();
 
   float inputSins[numberOfSins];
 
-  readSins(&inputSins[0], numberOfSins);
+  readInputSins(inputSins, numberOfSins);
 
-  setTrigonometricTable(&sin[0], &cos[0], &degrees[0]);
+  setTrigonometricTable(sin, cos, angles);
 
-  calculateOutput(&inputSins[0], &sin[0], &cos[0], &degrees[0], numberOfSins);
+  calculateOutput(sin, cos, angles, inputSins, numberOfSins);
 
   return 0;
 }
