@@ -17,3 +17,16 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 Caso seu sistema operacional não reconheça o comando, instale o GCC e tente novamente.
 
 **Versão do GCC utilizado para desenvolvimento do projeto: gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0**
+
+
+## Executando o projeto
+**Passo 1:** entre no diretório do projeto via terminal e conceda permissão de execução para o arquivo run.sh por meio do seguinte comando:
+```
+$ chmod +x run.sh
+```
+
+**Passo 2:** em seguida, execute o inscript de execução por meio do comando:
+```
+$ ./run.sh
+```
+O resultado será armazenado no arquivo senocosseno.txt, presente na pasta files.
