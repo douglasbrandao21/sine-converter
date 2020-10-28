@@ -1,25 +1,25 @@
 angle: 24.80°
 angle in rad: 0.432853
-sin = 0.419452
-cos = 0.907751
+sine = 0.419452
+cosine = 0.907751
 
 angle: 50°
 angle in rad: 0.872664
-sin = 0.766044
-cos = 0.642788
+sine = 0.766044
+cosine = 0.642788
 
 angle: 68°
 angle in rad: 1.186823
-sin = 0.926528
-cos = 0.374607
+sine = 0.926528
+cosine = 0.374607
 
 angle: 21.21°
 angle in rad: 0.370193
-sin = 0.361787
-cos = 0.932233
+sine = 0.361787
+cosine = 0.932233
 
 angle: 69°
 angle in rad: 1.204276
-sin = 0.932953
-cos = 0.358368
+sine = 0.932953
+cosine = 0.358368
 
